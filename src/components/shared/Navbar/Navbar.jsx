@@ -1,11 +1,23 @@
 import { FiLogIn } from "react-icons/fi";
 import { Link, NavLink } from "react-router-dom";
+import useAuth from "../../../hooks/useAuth";
 import "./Navbar.css";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
-  const loading = false;
-  const user = false
+  const { user, loading, logOut } = useAuth();
 
+  // log out
+  const handleLogOut = () => {
+    logOut().then((res) => {
+        console.log(res);
+        toast.success("Log out Successful");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  
   // navbar links
   const navLinks = (
     <>
@@ -56,7 +68,7 @@ const Navbar = () => {
                           {user?.displayName || "Name not found!"}
                         </li>
                         <li>
-                          <button                            className="btn h-auto min-h-0 btn-error rounded-md text-xs 2xl:text-base bg-secondary-color text-white py-2 xl:px-7 hover:bg-red-600"
+                          <button                   onClick={handleLogOut} className="btn h-auto min-h-0 btn-error rounded-md text-xs 2xl:text-base bg-secondary-color text-white py-2 xl:px-7 hover:bg-red-600"
                           >
                             Logout
                           </button>
