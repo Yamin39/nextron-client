@@ -5,7 +5,8 @@ import "./Navbar.css";
 const Navbar = () => {
   const loading = false;
   const user = false
-  
+
+  // navbar links
   const navLinks = (
     <>
       <li>
@@ -55,9 +56,7 @@ const Navbar = () => {
                           {user?.displayName || "Name not found!"}
                         </li>
                         <li>
-                          <button
-                            onClick={handleLogOut}
-                            className="btn h-auto min-h-0 btn-error rounded-md text-xs 2xl:text-base bg-secondary-color text-white py-2 xl:px-7 hover:bg-red-600"
+                          <button                            className="btn h-auto min-h-0 btn-error rounded-md text-xs 2xl:text-base bg-secondary-color text-white py-2 xl:px-7 hover:bg-red-600"
                           >
                             Logout
                           </button>
