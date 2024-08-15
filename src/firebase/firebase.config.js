@@ -7,12 +7,12 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDSW3-AFmnwvlga_Iw84ZhXbIuhDf4-_SE",
-  authDomain: "nextron-7.firebaseapp.com",
-  projectId: "nextron-7",
-  storageBucket: "nextron-7.appspot.com",
-  messagingSenderId: "871189440065",
-  appId: "1:871189440065:web:1601e7bd6be736350108c0"
+  apiKey: import.meta.env.VITE_APIKEY,
+  authDomain: import.meta.env.VITE_AUTHDOMAIN,
+  projectId: import.meta.env.VITE_PROJECTID,
+  storageBucket: import.meta.env.VITE_STORAGEBUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGINGSENDERID,
+  appId: import.meta.env.VITE_APPID,
 };
 
 // Initialize Firebase
