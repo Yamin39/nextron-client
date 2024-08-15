@@ -1,4 +1,4 @@
-const Home = () => {
+const Products = () => {
   return (
     <div className="container mx-auto">
       <h1 className="text-4xl font-bold text-center">Welcome to Nextron</h1>
@@ -9,4 +9,4 @@ const Home = () => {
   );
 }
 
-export default Home;
+export default Products;
