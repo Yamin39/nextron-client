@@ -1,9 +1,8 @@
 import { FcGoogle } from "react-icons/fc";
-import { useContext } from "react";
-import { AuthContext } from "../../../providers/AuthProvider";
+import useAuth from "../../../hooks/useAuth";
 
 const SocialLogin = () => {
-  const { loginWithGoogle } = useContext(AuthContext);
+  const { loginWithGoogle } = useAuth()
 
   const handleLogin = () => {
   loginWithGoogle().then((res)=> console.log(res)).catch(err=> console.log(err))
