@@ -1,0 +1,11 @@
+.login-nav.active {
+  border: none;
+}
+
+.navLink-container .active,
+.login-nav.active {
+  background-color: transparent !important;
+  color: black !important;
+  border-bottom: 3px solid #0177FB;
+  border-radius: 0;
+}
