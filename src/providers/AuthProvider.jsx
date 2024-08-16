@@ -53,7 +53,7 @@ const AuthProvider = ({ children }) => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       console.log("logged user: ", currentUser);
       setUser(currentUser);
-      setLoading(false)
+      setLoading(false);
     });
     return () => unSubscribe();
   }, [profileLoader]);
@@ -69,13 +69,15 @@ const AuthProvider = ({ children }) => {
     registerUser,
     updateUserNameAndPhoto,
     logOut,
-    logIn
+    logIn,
   };
-  return <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
+  );
 };
 
 AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default AuthProvider;  
+export default AuthProvider;

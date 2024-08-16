@@ -13,9 +13,11 @@ const router = createBrowserRouter([
       // product route
       {
         path: "/",
-        element: <PrivateRoute>
-          <Products></Products>
-        </PrivateRoute>,
+        element: (
+          <PrivateRoute>
+            <Products></Products>
+          </PrivateRoute>
+        ),
       },
       // login route
       {

@@ -1,28 +1,31 @@
 import { FcGoogle } from "react-icons/fc";
 import useAuth from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 const SocialLogin = () => {
-  const { loginWithGoogle } = useAuth()
+  const { loginWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = () => {
-  loginWithGoogle().then((res)=> {
-    console.log(res);
-    navigate("/");
-    toast.success("Success");
-  }).catch((error) => {
-    console.log(error);
-    toast.error("Error! Please try again");
-  });
-  }
+    loginWithGoogle()
+      .then((res) => {
+        console.log(res);
+        navigate("/");
+        toast.success("Success");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Error! Please try again");
+      });
+  };
   return (
     <div>
       {/* Google login */}
-      <button 
+      <button
         onClick={handleLogin}
-        className="btn w-full py-3 h-auto min-h-0 text-base rounded-2xl bg-[#d3d3d360]">
+        className="btn w-full py-3 h-auto min-h-0 text-base rounded-2xl bg-[#d3d3d360]"
+      >
         <FcGoogle className="text-xl" />
         Continue with Google
       </button>

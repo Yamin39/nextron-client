@@ -5,9 +5,15 @@ import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
 
 const Register = () => {
-  const { registerUser, updateUserNameAndPhoto, profileLoader, setProfileLoader, setLoading } = useAuth();
+  const {
+    registerUser,
+    updateUserNameAndPhoto,
+    profileLoader,
+    setProfileLoader,
+    setLoading,
+  } = useAuth();
   const navigate = useNavigate();
-  
+
   // toggle password visibility
   const [passToggle, setPassToggle] = useState(false);
 
@@ -48,15 +54,18 @@ const Register = () => {
       .then((res) => {
         console.log(res.user);
         updateUserNameAndPhoto(res.user, name, photoUrl)
-          .then(() => {         setProfileLoader(!profileLoader);
-                       toast.success("Registration Successful");
-                       navigate("/");
-      }).catch((err) => {
-      console.log(err?.message);
-        setLoading(false);
-       toast.error(err?.message);
-      });
-      }).catch((err) => {
+          .then(() => {
+            setProfileLoader(!profileLoader);
+            toast.success("Registration Successful");
+            navigate("/");
+          })
+          .catch((err) => {
+            console.log(err?.message);
+            setLoading(false);
+            toast.error(err?.message);
+          });
+      })
+      .catch((err) => {
         const error = err?.message;
         console.log(error?.message);
         if (/email-already-in-use/.test(error)) {
@@ -66,12 +75,14 @@ const Register = () => {
         }
         setLoading(false);
       });
-  }
+  };
 
   return (
     <div className="max-w-[37.5rem] mx-auto">
       <div className="text-center mb-6">
-        <h1 className="text-[3rem] sm:text-[3.45rem] lg:text-5xl font-bold mt-4">Register</h1>
+        <h1 className="text-[3rem] sm:text-[3.45rem] lg:text-5xl font-bold mt-4">
+          Register
+        </h1>
         <p className="text-gray-500 mt-4 pb-2">
           Welcome <br /> Create an account
         </p>
@@ -79,7 +90,9 @@ const Register = () => {
 
       <SocialLogin></SocialLogin>
 
-      <div className="divider before:bg-gray-400 after:bg-gray-400 my-6">OR</div>
+      <div className="divider before:bg-gray-400 after:bg-gray-400 my-6">
+        OR
+      </div>
 
       <form onSubmit={handleSubmit} className="card-body p-0">
         <div className="flex flex-col md:flex-row gap-6">
@@ -88,15 +101,31 @@ const Register = () => {
               <span className="label-text text-base font-semibold">NAME</span>
             </label>
             {/* name */}
-            <input name="name" id="name" type="text" placeholder="Enter name" className="input py-7 input-bordered rounded-2xl" required />
+            <input
+              name="name"
+              id="name"
+              type="text"
+              placeholder="Enter name"
+              className="input py-7 input-bordered rounded-2xl"
+              required
+            />
           </div>
 
           <div className="flex-grow form-control">
             <label htmlFor="photoURL" className="label">
-              <span className="label-text text-base font-semibold">PHOTO URL</span>
+              <span className="label-text text-base font-semibold">
+                PHOTO URL
+              </span>
             </label>
             {/* photoURL */}
-            <input name="photoURL" id="photoURL" type="text" placeholder="Enter photoURL" className="input py-7 input-bordered rounded-2xl" required />
+            <input
+              name="photoURL"
+              id="photoURL"
+              type="text"
+              placeholder="Enter photoURL"
+              className="input py-7 input-bordered rounded-2xl"
+              required
+            />
           </div>
         </div>
 
@@ -106,14 +135,29 @@ const Register = () => {
               <span className="label-text text-base font-semibold">EMAIL</span>
             </label>
             {/* email */}
-            <input name="email" id="email" type="email" placeholder="Enter email" className="input py-7 input-bordered rounded-2xl" required />
+            <input
+              name="email"
+              id="email"
+              type="email"
+              placeholder="Enter email"
+              className="input py-7 input-bordered rounded-2xl"
+              required
+            />
           </div>
 
           <div className="flex-grow form-control">
             <label htmlFor="pass" className="label">
-              <span className="label-text text-base font-semibold">Password</span>
+              <span className="label-text text-base font-semibold">
+                Password
+              </span>
               <div className="flex items-center gap-2 mt-3">
-                <input name="checkbox" onChange={() => setPassToggle(!passToggle)} type="checkbox" id="checkbox" className="checkbox checkbox-sm" />
+                <input
+                  name="checkbox"
+                  onChange={() => setPassToggle(!passToggle)}
+                  type="checkbox"
+                  id="checkbox"
+                  className="checkbox checkbox-sm"
+                />
                 <label htmlFor="checkbox">Show</label>
               </div>
             </label>
