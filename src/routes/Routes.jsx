@@ -3,6 +3,7 @@ import Products from "../pages/Products/Products";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import Root from "../layouts/Root";
+import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -12,7 +13,9 @@ const router = createBrowserRouter([
       // product route
       {
         path: "/",
-        element: <Products></Products>,
+        element: <PrivateRoute>
+          <Products></Products>
+        </PrivateRoute>,
       },
       // login route
       {
