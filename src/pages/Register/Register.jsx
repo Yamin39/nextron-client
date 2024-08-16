@@ -43,8 +43,6 @@ const Register = () => {
       return;
     }
 
-   console.log(name, photoUrl, email, password);
-
     // register
     registerUser(email, password)
       .then((res) => {

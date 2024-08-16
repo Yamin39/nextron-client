@@ -1,9 +1,13 @@
 import { useState } from "react";
 import SocialLogin from "../../components/general/SocialLogin/SocialLogin";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import toast from "react-hot-toast";
 
 const Login = () => {
+  const { logIn } = useAuth();
+  const navigate = useNavigate();
+  
   // toggle password visibility
   const [passToggle, setPassToggle] = useState(false);
 
@@ -16,7 +20,21 @@ const Login = () => {
     const email = form.email.value;
     const password = form.password.value;
 
-    console.log({email, password})
+    // login
+    logIn(email, password)
+      .then((res) => {
+        console.log(res.user);
+        toast.success("Login Successful");
+        navigate("/");
+      })
+      .catch((err) => {
+        console.error(err);
+        if (/invalid-credential/.test(err.message)) {
+          toast.error("Email or Password is wrong");
+        } else {
+          toast.error(err.message);
+        }
+      });
   };
   return (
     <div className="max-w-[23.125rem] mx-auto">
