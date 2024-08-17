@@ -22,26 +22,17 @@ const Footer = () => {
                 <h6 className="text-xl font-medium">Quick Links</h6>
                 <ul className="font-light mt-2 space-y-1 text-gray-600">
                   <li>
-                    <Link
-                      to="/"
-                      className="hover:underline hover:text-gray-500"
-                    >
+                    <Link to="/" className="hover:underline hover:text-gray-500">
                       Products
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      to="/login"
-                      className="hover:underline hover:text-gray-500"
-                    >
+                    <Link to="/login" className="hover:underline hover:text-gray-500">
                       Login
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      to="/register"
-                      className="hover:underline hover:text-gray-500"
-                    >
+                    <Link to="/register" className="hover:underline hover:text-gray-500">
                       Register
                     </Link>
                   </li>
@@ -92,8 +83,7 @@ const Footer = () => {
         </div>
         <div className="text-gray-500 text-center mt-16">
           <p>
-            Copyright <CgCopyright className="inline" /> 2024. Nextron , All
-            rights reserved.
+            Copyright <CgCopyright className="inline" /> 2024. Nextron , All rights reserved.
           </p>
         </div>
       </div>

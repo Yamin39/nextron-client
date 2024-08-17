@@ -6,6 +6,6 @@
 .login-nav.active {
   background-color: transparent !important;
   color: black !important;
-  border-bottom: 3px solid #0177FB;
+  border-bottom: 3px solid #0177fb;
   border-radius: 0;
 }

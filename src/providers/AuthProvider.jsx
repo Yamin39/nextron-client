@@ -71,9 +71,7 @@ const AuthProvider = ({ children }) => {
     logOut,
     logIn,
   };
-  return (
-    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>;
 };
 
 AuthProvider.propTypes = {

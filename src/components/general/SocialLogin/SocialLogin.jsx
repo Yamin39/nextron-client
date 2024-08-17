@@ -1,7 +1,7 @@
-import { FcGoogle } from "react-icons/fc";
-import useAuth from "../../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { FcGoogle } from "react-icons/fc";
+import { useNavigate } from "react-router-dom";
+import useAuth from "../../../hooks/useAuth";
 
 const SocialLogin = () => {
   const { loginWithGoogle } = useAuth();
@@ -22,10 +22,7 @@ const SocialLogin = () => {
   return (
     <div>
       {/* Google login */}
-      <button
-        onClick={handleLogin}
-        className="btn w-full py-3 h-auto min-h-0 text-base rounded-2xl bg-[#d3d3d360]"
-      >
+      <button onClick={handleLogin} className="btn w-full py-3 h-auto min-h-0 text-base rounded-2xl bg-[#d3d3d360]">
         <FcGoogle className="text-xl" />
         Continue with Google
       </button>

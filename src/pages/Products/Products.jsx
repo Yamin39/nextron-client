@@ -1,32 +1,26 @@
-import useAuth from "../../hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import ProductsCard from "../../components/general/ProductsCard/ProductsCard";
-import { useQuery } from "@tanstack/react-query";
+import useAuth from "../../hooks/useAuth";
 
 const Products = () => {
   const { user } = useAuth();
-  const [seacrh, setSearch] = useState("");
+  const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
 
   // get products
   const { data: products = [], isLoading: productsLoading } = useQuery({
-    queryKey: ["products", seacrh, category],
-    queryFn: () =>
-      fetch(
-        `${import.meta.env.VITE_API_URL}/products?search=${seacrh}&category=${category}`,
-      ).then((res) => res.json()),
+    queryKey: ["products", search, category],
+    queryFn: () => fetch(`http://localhost:5000/products?search=${search}&category=${category}`).then((res) => res.json()),
   });
 
   // get categories
   const { data: categories = [], isLoading: categoriesLoading } = useQuery({
     queryKey: ["categories"],
-    queryFn: () =>
-      fetch(`${import.meta.env.VITE_API_URL}/categories`).then((res) =>
-        res.json(),
-      ),
+    queryFn: () => fetch(`http://localhost:5000/categories`).then((res) => res.json()),
   });
 
-  // seacrh box handler
+  // search box handler
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -40,32 +34,16 @@ const Products = () => {
       {/* Header */}
       <div className="pt-8 pb-20 text-center">
         <h4 className="text-4xl font-bold">
-          Hey,{" "}
-          <span className="text-primary-color">{user?.displayName || ""}</span>!{" "}
-          <br />
+          Hey, <span className="text-primary-color">{user?.displayName || ""}</span>! <br />
           We Have The Best Electronic Gadgets For You.
         </h4>
       </div>
 
       {/* search box */}
-      <form
-        onSubmit={handleSubmit}
-        className="mb-10 max-w-md mx-auto flex gap-6"
-      >
+      <form onSubmit={handleSubmit} className="mb-10 max-w-md mx-auto flex gap-6">
         <label className="input input-bordered flex items-center gap-2">
-          <input
-            type="text"
-            className="grow"
-            placeholder="Search"
-            name="search_box"
-            required
-          />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            className="h-4 w-4 opacity-70"
-          >
+          <input type="text" className="grow" placeholder="Search" name="search_box" required />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
             <path
               fillRule="evenodd"
               d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
@@ -80,16 +58,15 @@ const Products = () => {
       {/* filter */}
       <div className="flex flex-wrap gap-4 justify-center mb-10">
         {/* Category */}
-        <select
-          onChange={(e) => setCategory(e.target.value)}
-          className="select select-bordered"
-        >
+        <select onChange={(e) => setCategory(e.target.value)} className="select select-bordered">
           <option disabled selected>
             Category
           </option>
           <option value="">All</option>
-          {categories.map((category) => (
-            <option value={category}>{category}</option>
+          {categories.map((category, i) => (
+            <option key={i} value={category}>
+              {category}
+            </option>
           ))}
         </select>
       </div>
