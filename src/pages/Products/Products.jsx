@@ -6,15 +6,27 @@ import { useQuery } from "@tanstack/react-query";
 const Products = () => {
   const { user } = useAuth();
   const [seacrh, setSearch] = useState("");
+  const [category, setCategory] = useState("");
 
-  const { data: products, isLoading } = useQuery({
-    queryKey: ["products", seacrh],
+  // get products
+  const { data: products = [], isLoading: productsLoading } = useQuery({
+    queryKey: ["products", seacrh, category],
     queryFn: () =>
-      fetch(`${import.meta.env.VITE_API_URL}/products?search=${seacrh}`).then(
-        (res) => res.json(),
+      fetch(
+        `${import.meta.env.VITE_API_URL}/products?search=${seacrh}&category=${category}`,
+      ).then((res) => res.json()),
+  });
+
+  // get categories
+  const { data: categories = [], isLoading: categoriesLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () =>
+      fetch(`${import.meta.env.VITE_API_URL}/categories`).then((res) =>
+        res.json(),
       ),
   });
 
+  // seacrh box handler
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -25,6 +37,7 @@ const Products = () => {
 
   return (
     <div className="pb-10">
+      {/* Header */}
       <div className="pt-8 pb-20 text-center">
         <h4 className="text-4xl font-bold">
           Hey,{" "}
@@ -34,9 +47,10 @@ const Products = () => {
         </h4>
       </div>
 
+      {/* search box */}
       <form
         onSubmit={handleSubmit}
-        className="mb-20 max-w-md mx-auto flex gap-6"
+        className="mb-10 max-w-md mx-auto flex gap-6"
       >
         <label className="input input-bordered flex items-center gap-2">
           <input
@@ -63,7 +77,25 @@ const Products = () => {
         <button className="btn btn-primary bg-primary-color">Search</button>
       </form>
 
-      {isLoading ? (
+      {/* filter */}
+      <div className="flex flex-wrap gap-4 justify-center mb-10">
+        {/* Category */}
+        <select
+          onChange={(e) => setCategory(e.target.value)}
+          className="select select-bordered"
+        >
+          <option disabled selected>
+            Category
+          </option>
+          <option value="">All</option>
+          {categories.map((category) => (
+            <option value={category}>{category}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* products */}
+      {productsLoading || categoriesLoading ? (
         <div className="min-h-screen mx-auto w-fit">
           <span className="loading loading-spinner loading-lg"></span>
         </div>
