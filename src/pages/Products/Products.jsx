@@ -1,36 +1,26 @@
 import useAuth from "../../hooks/useAuth";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ProductsCard from "../../components/general/ProductsCard/ProductsCard";
+import { useQuery } from "@tanstack/react-query";
 
 const Products = () => {
   const { user } = useAuth();
-  const [products, setProducts] = useState([]);
-  const [loader, setLoader] = useState(true);
-  // const [seacrh, setSearch] = useState("")
+  const [seacrh, setSearch] = useState("");
 
-  const refetch = (seacrh) => {
-    console.log(seacrh);
-    setLoader(true);
-    fetch(`${import.meta.env.VITE_API_URL}/products?search=${seacrh}`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setProducts(data);
-        setLoader(false);
-      });
-  };
-
-  useEffect(() => {
-    refetch("");
-  }, []);
+  const { data: products, isLoading } = useQuery({
+    queryKey: ["products", seacrh],
+    queryFn: () =>
+      fetch(`${import.meta.env.VITE_API_URL}/products?search=${seacrh}`).then(
+        (res) => res.json(),
+      ),
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
-    const search = form.search_box.value;
-    console.log(search);
-    // setSearch(seacrh)
-    refetch(search);
+    const searchText = form.search_box.value;
+    console.log(searchText);
+    setSearch(searchText);
   };
 
   return (
@@ -73,7 +63,7 @@ const Products = () => {
         <button className="btn btn-primary bg-primary-color">Search</button>
       </form>
 
-      {loader ? (
+      {isLoading ? (
         <div className="min-h-screen mx-auto w-fit">
           <span className="loading loading-spinner loading-lg"></span>
         </div>
