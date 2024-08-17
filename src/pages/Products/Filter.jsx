@@ -2,7 +2,8 @@ import { useContext } from "react";
 import { ProductsContext } from "./Products";
 
 const Filter = () => {
-  const { categoriesLoading, categories, setCategory, productsLoading, brands, priceRangeHandler } = useContext(ProductsContext);
+  const { categoriesLoading, categories, setCategory, productsLoading, brands, priceRangeHandler, selectBrandHandler, selectedBrands } =
+    useContext(ProductsContext);
   return (
     <>
       {/* Category */}
@@ -47,7 +48,7 @@ const Filter = () => {
           <div className="flex flex-col gap-2">
             {brands.map((brand, i) => (
               <label key={i} className="cursor-pointer flex items-center gap-2">
-                <input type="checkbox" name="brand" value={brand} />
+                <input type="checkbox" value={brand} onChange={selectBrandHandler} checked={selectedBrands.includes(brand)} />
                 <span>{brand}</span>
               </label>
             ))}

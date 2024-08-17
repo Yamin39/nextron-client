@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import ProductsCard from "../../components/general/ProductsCard/ProductsCard";
 import useAuth from "../../hooks/useAuth";
@@ -14,12 +14,15 @@ const Products = () => {
   const [category, setCategory] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+  const [selectedBrands, setSelectedBrands] = useState([]);
 
   // get products
   const { data: products = [], isLoading: productsLoading } = useQuery({
-    queryKey: ["products", search, category, minPrice, maxPrice],
+    queryKey: ["products", search, category, minPrice, maxPrice, selectedBrands],
     queryFn: () =>
-      fetch(`http://localhost:5000/products?search=${search}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}`).then((res) => res.json()),
+      fetch(
+        `http://localhost:5000/products?search=${search}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&brands=${selectedBrands.join(",")}`
+      ).then((res) => res.json()),
   });
 
   // get categories
@@ -29,7 +32,10 @@ const Products = () => {
   });
 
   // get brands
-  const brands = [...new Set(products.map((product) => product.brand))];
+  const { data: brands = [] } = useQuery({
+    queryKey: ["brands"],
+    queryFn: () => fetch(`http://localhost:5000/brands`).then((res) => res.json()),
+  });
 
   // search box handler
   const searchHandler = (e) => {
@@ -58,8 +64,22 @@ const Products = () => {
     setMaxPrice(maxPrice);
   };
 
+  // select brand handler
+  const selectBrandHandler = (e) => {
+    const brand = e.target.value;
+    if (selectedBrands.includes(brand)) {
+      setSelectedBrands(selectedBrands.filter((selectedBrand) => selectedBrand !== brand));
+    } else {
+      setSelectedBrands([...selectedBrands, brand]);
+    }
+  };
+
+  useEffect(() => {
+    console.log("selected brands: ", selectedBrands);
+  }, [selectedBrands]);
+
   // product context data
-  const productsContextData = { categoriesLoading, categories, setCategory, productsLoading, brands, priceRangeHandler };
+  const productsContextData = { categoriesLoading, categories, setCategory, productsLoading, brands, priceRangeHandler, selectBrandHandler, selectedBrands };
   return (
     <ProductsContext.Provider value={productsContextData}>
       <div className="pb-10">
@@ -133,7 +153,7 @@ const Products = () => {
               <span className="loading loading-spinner loading-lg"></span>
             </div>
           ) : (
-            <div className="w-full grid gap-10 grid-cols-1 sm:grid-cols-2">
+            <div className="w-full h-fit grid gap-10 grid-cols-1 sm:grid-cols-2">
               {products?.map((product) => (
                 <ProductsCard key={product._id} product={product}></ProductsCard>
               ))}
