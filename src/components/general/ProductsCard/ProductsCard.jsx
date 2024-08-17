@@ -7,7 +7,7 @@ const ProductsCard = ({ product }) => {
   const { img, name, category, description, price, ratings, time, brand } = product;
   return (
     <div className="bg-[#a1a1a121] shadow-lg rounded-3xl flex flex-col justify-between">
-      <div className="relative">
+      <div className="relative z-[-1]">
         <div className="w-full h-[14rem] sm:h-[18.75rem] md:h-[22vw] lg:h-[11rem] xl:h-[12.5rem] 2xl:h-[18.75rem]">
           <img className="size-full object-cover rounded-2xl" src={img} alt={name} />
         </div>

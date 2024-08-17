@@ -1,7 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { createContext, useState } from "react";
 import ProductsCard from "../../components/general/ProductsCard/ProductsCard";
 import useAuth from "../../hooks/useAuth";
+import Filter from "./Filter";
+
+// products context
+export const ProductsContext = createContext();
 
 const Products = () => {
   const { user } = useAuth();
@@ -20,6 +24,9 @@ const Products = () => {
     queryFn: () => fetch(`http://localhost:5000/categories`).then((res) => res.json()),
   });
 
+  // get brands
+  const brands = [...new Set(products.map((product) => product.brand))];
+
   // search box handler
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,61 +36,90 @@ const Products = () => {
     setSearch(searchText);
   };
 
+  // product context data
+  const productsContextData = { categoriesLoading, categories, setCategory, productsLoading, brands };
   return (
-    <div className="pb-10">
-      {/* Header */}
-      <div className="pt-8 pb-20 text-center">
-        <h4 className="text-4xl font-bold">
-          Hey, <span className="text-primary-color">{user?.displayName || ""}</span>! <br />
-          We Have The Best Electronic Gadgets For You.
-        </h4>
-      </div>
-
-      {/* search box */}
-      <form onSubmit={handleSubmit} className="mb-10 max-w-md mx-auto flex gap-6">
-        <label className="input input-bordered flex items-center gap-2">
-          <input type="text" className="grow" placeholder="Search" name="search_box" required />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
-            <path
-              fillRule="evenodd"
-              d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </label>
-
-        <button className="btn btn-primary bg-primary-color">Search</button>
-      </form>
-
-      {/* filter */}
-      <div className="flex flex-wrap gap-4 justify-center mb-10">
-        {/* Category */}
-        <select onChange={(e) => setCategory(e.target.value)} className="select select-bordered">
-          <option disabled selected>
-            Category
-          </option>
-          <option value="">All</option>
-          {categories.map((category, i) => (
-            <option key={i} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* products */}
-      {productsLoading || categoriesLoading ? (
-        <div className="min-h-screen mx-auto w-fit">
-          <span className="loading loading-spinner loading-lg"></span>
+    <ProductsContext.Provider value={productsContextData}>
+      <div className="pb-10">
+        {/* Header */}
+        <div className="pt-8 pb-20 text-center">
+          <h4 className="text-4xl font-bold">
+            Hey, <span className="text-primary-color">{user?.displayName || ""}</span>! <br />
+            We Have The Best Electronic Gadgets For You.
+          </h4>
         </div>
-      ) : (
-        <div className="grid gap-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {products?.map((product) => (
-            <ProductsCard key={product._id} product={product}></ProductsCard>
-          ))}
+
+        <div className="mb-16 flex flex-col md:flex-row items-center gap-6 justify-between">
+          {/* search box */}
+          <form onSubmit={handleSubmit} className="max-w-md flex gap-6">
+            <label className="input input-bordered flex items-center gap-2">
+              <input type="text" className="grow" placeholder="Search" name="search_box" />
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
+                <path
+                  fillRule="evenodd"
+                  d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </label>
+
+            <button className="btn btn-primary bg-primary-color border-none">Search</button>
+          </form>
+
+          {/* Sort */}
+          <div className="flex gap-4 justify-center items-center">
+            <h3 className="text-lg font-semibold">Sort By:</h3>
+            <select className="select select-bordered">
+              <option value="" selected>
+                Default
+              </option>
+              <option value="low_to_high">Low to High</option>
+              <option value="high_to_low">High to Low</option>
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+            </select>
+          </div>
+
+          {/* filter drawer */}
+          <div className="drawer drawer-end md:hidden">
+            <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
+            <div className="drawer-content text-center">
+              {/* Page content here */}
+              <label htmlFor="my-drawer-4" className="drawer-button btn bg-black text-white hover:bg-gray-800 w-full max-w-[10rem]">
+                Filter
+              </label>
+            </div>
+            <div className="drawer-side">
+              <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
+              <ul className="relative z-50 menu bg-white text-base-content min-h-full w-80 p-7">
+                {/* Sidebar content here */}
+                <Filter />
+              </ul>
+            </div>
+          </div>
         </div>
-      )}
-    </div>
+
+        <div className="flex gap-12">
+          {/* filters */}
+          <div className="w-full max-w-xs hidden md:block">
+            <Filter />
+          </div>
+
+          {/* products */}
+          {productsLoading ? (
+            <div className="min-h-screen mx-auto w-fit">
+              <span className="loading loading-spinner loading-lg"></span>
+            </div>
+          ) : (
+            <div className="w-full grid gap-10 grid-cols-1 sm:grid-cols-2">
+              {products?.map((product) => (
+                <ProductsCard key={product._id} product={product}></ProductsCard>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </ProductsContext.Provider>
   );
 };
 
