@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { ProductsContext } from "./Products";
 
 const Filter = () => {
-  const { categoriesLoading, categories, setCategory, productsLoading, brands } = useContext(ProductsContext);
+  const { categoriesLoading, categories, setCategory, productsLoading, brands, priceRangeHandler } = useContext(ProductsContext);
   return (
     <>
       {/* Category */}
@@ -29,10 +29,10 @@ const Filter = () => {
 
       {/* Price range */}
       <h3 className="text-xl font-semibold mt-7 mb-5">Price Range</h3>
-      <form>
+      <form onSubmit={priceRangeHandler}>
         <div className="flex gap-4">
-          <input type="number" name="min_price" placeholder="Min" className="w-full input input-bordered" />
-          <input type="number" name="max_price" placeholder="Max" className="w-full input input-bordered" />
+          <input type="number" name="min_price" placeholder="Min" className="w-full input input-bordered" min={0} step={1} required />
+          <input type="number" name="max_price" placeholder="Max" className="w-full input input-bordered" min={0} step={1} required />
         </div>
         <button className="btn btn-primary border-none bg-primary-color w-full mt-4">Apply</button>
       </form>

@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useState } from "react";
+import toast from "react-hot-toast";
 import ProductsCard from "../../components/general/ProductsCard/ProductsCard";
 import useAuth from "../../hooks/useAuth";
 import Filter from "./Filter";
@@ -11,11 +12,14 @@ const Products = () => {
   const { user } = useAuth();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
 
   // get products
   const { data: products = [], isLoading: productsLoading } = useQuery({
-    queryKey: ["products", search, category],
-    queryFn: () => fetch(`http://localhost:5000/products?search=${search}&category=${category}`).then((res) => res.json()),
+    queryKey: ["products", search, category, minPrice, maxPrice],
+    queryFn: () =>
+      fetch(`http://localhost:5000/products?search=${search}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}`).then((res) => res.json()),
   });
 
   // get categories
@@ -28,7 +32,7 @@ const Products = () => {
   const brands = [...new Set(products.map((product) => product.brand))];
 
   // search box handler
-  const handleSubmit = (e) => {
+  const searchHandler = (e) => {
     e.preventDefault();
     const form = e.target;
     const searchText = form.search_box.value;
@@ -36,8 +40,26 @@ const Products = () => {
     setSearch(searchText);
   };
 
+  // price range handler
+  const priceRangeHandler = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const minPrice = form.min_price.value;
+    const maxPrice = form.max_price.value;
+
+    // validation
+    if (Number(minPrice) > Number(maxPrice)) {
+      toast.error("Min price should be less than max price");
+      return;
+    }
+
+    console.log(minPrice, maxPrice);
+    setMinPrice(minPrice);
+    setMaxPrice(maxPrice);
+  };
+
   // product context data
-  const productsContextData = { categoriesLoading, categories, setCategory, productsLoading, brands };
+  const productsContextData = { categoriesLoading, categories, setCategory, productsLoading, brands, priceRangeHandler };
   return (
     <ProductsContext.Provider value={productsContextData}>
       <div className="pb-10">
@@ -51,7 +73,7 @@ const Products = () => {
 
         <div className="mb-16 flex flex-col md:flex-row items-center gap-6 justify-between">
           {/* search box */}
-          <form onSubmit={handleSubmit} className="max-w-md flex gap-6">
+          <form onSubmit={searchHandler} className="max-w-md flex gap-6">
             <label className="input input-bordered flex items-center gap-2">
               <input type="text" className="grow" placeholder="Search" name="search_box" />
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
