@@ -10,21 +10,26 @@ export const FilterContext = createContext();
 
 const Products = () => {
   const { user } = useAuth();
+
+  // states
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [sorting, setSorting] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const productsPerPage = 6;
 
   // get products
   const { data: products = [], isLoading: productsLoading } = useQuery({
-    queryKey: ["products", search, category, minPrice, maxPrice, selectedBrands, sorting],
+    queryKey: ["products", search, category, minPrice, maxPrice, selectedBrands, sorting, currentPage, productsPerPage],
     queryFn: () =>
       fetch(
         `http://localhost:5000/products?search=${search}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&brands=${selectedBrands.join(
           ","
-        )}&sort=${sorting}`
+        )}&sort=${sorting}&page=${currentPage}&size=${productsPerPage}`
       ).then((res) => res.json()),
   });
 
@@ -38,6 +43,21 @@ const Products = () => {
   const { data: brands = [] } = useQuery({
     queryKey: ["brands"],
     queryFn: () => fetch(`http://localhost:5000/brands`).then((res) => res.json()),
+  });
+
+  // get products count
+  const { data: count = 0 } = useQuery({
+    queryKey: ["productsCount", search, category, minPrice, maxPrice, selectedBrands],
+    queryFn: () =>
+      fetch(
+        `http://localhost:5000/products/count?search=${search}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&brands=${selectedBrands.join(
+          ","
+        )}`
+      ).then(async (res) => {
+        const data = await res.json();
+        console.log(data?.count);
+        return data?.count;
+      }),
   });
 
   // search box handler
@@ -82,6 +102,23 @@ const Products = () => {
     const sort = e.target.value;
     console.log(sort);
     setSorting(sort);
+  };
+
+  // pagination
+  // const count = 43;
+  const totalPages = Math.ceil(count / productsPerPage);
+  const pages = [...Array(totalPages).keys()];
+
+  const handlePrevBtn = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextBtn = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   useEffect(() => {
@@ -167,6 +204,23 @@ const Products = () => {
               {products?.map((product) => (
                 <ProductsCard key={product._id} product={product}></ProductsCard>
               ))}
+
+              {/* pagination */}
+              <div className="mt-16 text-center col-span-2">
+                <div className="join">
+                  <button className="join-item btn btn-lg bg-primary-color hover:bg-primary-color hover:brightness-90 text-white" onClick={handlePrevBtn}>
+                    «
+                  </button>
+                  {pages.map((page) => (
+                    <button onClick={() => setCurrentPage(page)} className={`join-item btn btn-lg ${currentPage === page ? "btn-active" : ""}`} key={page}>
+                      {page + 1}
+                    </button>
+                  ))}
+                  <button className="join-item btn btn-lg bg-primary-color hover:bg-primary-color hover:brightness-90 text-white" onClick={handleNextBtn}>
+                    »
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>
