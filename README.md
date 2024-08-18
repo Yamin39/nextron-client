@@ -24,7 +24,7 @@ cd nextron-client
 npm install
 ```
 
-4. **Add important credentials**: Create a .env.local file and add your Firebase credentials and Stripe publish key.
+4. **Add important credentials**: Create a .env.local file and add your Firebase credentials.
 ```javascript
 VITE_APIKEY=yourAPIKEY
 VITE_AUTHDOMAIN=yourAUTHDOMAIN
