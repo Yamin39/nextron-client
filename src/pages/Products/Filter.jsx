@@ -1,9 +1,9 @@
 import { useContext } from "react";
-import { ProductsContext } from "./Products";
+import { FilterContext } from "./Products";
 
 const Filter = () => {
   const { categoriesLoading, categories, setCategory, productsLoading, brands, priceRangeHandler, selectBrandHandler, selectedBrands } =
-    useContext(ProductsContext);
+    useContext(FilterContext);
   return (
     <>
       {/* Category */}

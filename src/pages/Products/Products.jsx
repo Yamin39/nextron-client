@@ -5,8 +5,8 @@ import ProductsCard from "../../components/general/ProductsCard/ProductsCard";
 import useAuth from "../../hooks/useAuth";
 import Filter from "./Filter";
 
-// products context
-export const ProductsContext = createContext();
+// filter context
+export const FilterContext = createContext();
 
 const Products = () => {
   const { user } = useAuth();
@@ -15,13 +15,16 @@ const Products = () => {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [selectedBrands, setSelectedBrands] = useState([]);
+  const [sorting, setSorting] = useState("");
 
   // get products
   const { data: products = [], isLoading: productsLoading } = useQuery({
-    queryKey: ["products", search, category, minPrice, maxPrice, selectedBrands],
+    queryKey: ["products", search, category, minPrice, maxPrice, selectedBrands, sorting],
     queryFn: () =>
       fetch(
-        `http://localhost:5000/products?search=${search}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&brands=${selectedBrands.join(",")}`
+        `http://localhost:5000/products?search=${search}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&brands=${selectedBrands.join(
+          ","
+        )}&sort=${sorting}`
       ).then((res) => res.json()),
   });
 
@@ -74,14 +77,21 @@ const Products = () => {
     }
   };
 
+  // sorting handler
+  const sortingHandler = (e) => {
+    const sort = e.target.value;
+    console.log(sort);
+    setSorting(sort);
+  };
+
   useEffect(() => {
     console.log("selected brands: ", selectedBrands);
   }, [selectedBrands]);
 
-  // product context data
-  const productsContextData = { categoriesLoading, categories, setCategory, productsLoading, brands, priceRangeHandler, selectBrandHandler, selectedBrands };
+  // filter context data
+  const filterContextData = { categoriesLoading, categories, setCategory, productsLoading, brands, priceRangeHandler, selectBrandHandler, selectedBrands };
   return (
-    <ProductsContext.Provider value={productsContextData}>
+    <FilterContext.Provider value={filterContextData}>
       <div className="pb-10">
         {/* Header */}
         <div className="pt-8 pb-20 text-center">
@@ -111,18 +121,18 @@ const Products = () => {
           {/* Sort */}
           <div className="flex gap-4 justify-center items-center">
             <h3 className="text-lg font-semibold">Sort By:</h3>
-            <select className="select select-bordered">
+            <select onChange={sortingHandler} name="sort" className="select select-bordered">
               <option value="" selected>
                 Default
               </option>
-              <option value="low_to_high">Low to High</option>
-              <option value="high_to_low">High to Low</option>
+              <option value="asc">Low to High</option>
+              <option value="desc">High to Low</option>
               <option value="newest">Newest</option>
               <option value="oldest">Oldest</option>
             </select>
           </div>
 
-          {/* filter drawer */}
+          {/* filters drawer for small devices */}
           <div className="drawer drawer-end md:hidden">
             <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
             <div className="drawer-content text-center">
@@ -142,7 +152,7 @@ const Products = () => {
         </div>
 
         <div className="flex gap-12">
-          {/* filters */}
+          {/* filters sidebar for desktops */}
           <div className="w-full max-w-xs hidden md:block">
             <Filter />
           </div>
@@ -161,7 +171,7 @@ const Products = () => {
           )}
         </div>
       </div>
-    </ProductsContext.Provider>
+    </FilterContext.Provider>
   );
 };
 
