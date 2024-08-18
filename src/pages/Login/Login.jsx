@@ -23,7 +23,7 @@ const Login = () => {
     // login
     logIn(email, password)
       .then((res) => {
-        console.log(res.user);
+        // console.log(res.user);
         toast.success("Login Successful");
         navigate("/");
       })

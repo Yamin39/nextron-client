@@ -27,7 +27,7 @@ const Products = () => {
     queryKey: ["products", search, category, minPrice, maxPrice, selectedBrands, sorting, currentPage, productsPerPage],
     queryFn: () =>
       fetch(
-        `http://localhost:5000/products?search=${search}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&brands=${selectedBrands.join(
+        `https://nextron-server.vercel.app/products?search=${search}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&brands=${selectedBrands.join(
           ","
         )}&sort=${sorting}&page=${currentPage}&size=${productsPerPage}`
       ).then((res) => res.json()),
@@ -36,13 +36,13 @@ const Products = () => {
   // get categories
   const { data: categories = [], isLoading: categoriesLoading } = useQuery({
     queryKey: ["categories"],
-    queryFn: () => fetch(`http://localhost:5000/categories`).then((res) => res.json()),
+    queryFn: () => fetch(`https://nextron-server.vercel.app/categories`).then((res) => res.json()),
   });
 
   // get brands
   const { data: brands = [] } = useQuery({
     queryKey: ["brands"],
-    queryFn: () => fetch(`http://localhost:5000/brands`).then((res) => res.json()),
+    queryFn: () => fetch(`https://nextron-server.vercel.app/brands`).then((res) => res.json()),
   });
 
   // get products count
@@ -50,7 +50,7 @@ const Products = () => {
     queryKey: ["productsCount", search, category, minPrice, maxPrice, selectedBrands],
     queryFn: () =>
       fetch(
-        `http://localhost:5000/products/count?search=${search}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&brands=${selectedBrands.join(
+        `https://nextron-server.vercel.app/products/count?search=${search}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&brands=${selectedBrands.join(
           ","
         )}`
       ).then(async (res) => {
